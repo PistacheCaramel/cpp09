@@ -7,29 +7,32 @@
 int	main(int ac, char **av)
 {
 	std::fstream 					fs;
-	std::string					str;
-	std::map<std::string, std::string>		database;
-	std::map<std::string, std::string>::iterator	it;
+	std::fstream 					fsa;
+	BitcoinExchange					bitex;
 
 	(void) ac;
 	(void) av;
+	if (ac != 2)
+	{
+		std::cerr << "Error: could not open file." << std::endl;
+		return (0);
+	}
+	
 	fs.open("data.csv", std::fstream::in);
-	std::getline(fs, str);
-	while (!(std::getline(fs, str).eof()))
+	if (!fs.is_open())
 	{
-		database.insert(std::pair<std::string,
-						std::string>(str.substr(0,str.find_first_of(",")), 
-								str.substr(str.find_first_of(",") + 1,
-									str.size() - str.find_first_of(",") + 1)));
-		str.erase();
+		std::cerr << "Error: could not open database file." << std::endl;
+		return (0);
 	}
-	it = database.begin();
-	while (it != database.end())
-	{
-		std::cout << it->first << "," << it->second << std::endl;
-		it++;
-	}
+	bitex.setDatabase(fs);
 	fs.close();
+	fsa.open(av[1], std::fstream::in);
+	if (!fs.is_open())
+	{
+		std::cerr << "Error: could not open file." << std::endl;
+		return (0);
+	}
+	bitex.printDatabase();
 	return (0);
 }
 

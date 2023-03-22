@@ -2,16 +2,25 @@
 #ifndef BITCOINEXCHANGE_HPP
 # define BITCOINEXCHANGE_HPP
 
-#include <string>
+# include <string>
+# include <fstream>
+# include <map>
+# include <iostream>
 
 class	BitcoinExchange
 {
+	private:
+			std::map<std::string, std::string>		_database;
+
 	public:
 					BitcoinExchange(void);
 					BitcoinExchange(const  BitcoinExchange&);
-					BitcoinExchange(const std::string name);
+					BitcoinExchange(std::fstream& fs);
 					~BitcoinExchange(void);
 		BitcoinExchange&		operator=( BitcoinExchange const &src);
+		std::map<std::string, std::string>	getDatabase(void) const;
+		void			setDatabase(std::fstream& fs);
+		void			printDatabase(void);
 };
 
 std::ostream &	operator<<(std::ostream & o, BitcoinExchange const & i);

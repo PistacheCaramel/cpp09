@@ -1,10 +1,10 @@
-NAME	= bitex
+NAME	= btc
 
 CXX		= c++
 
 CXXFLAGS	= -Wall -Wextra -Werror -MMD -std=c++98 -g3
 
-SRCS	= main.cpp
+SRCS	= main.cpp BitcoinExchange.cpp
 OBJS	= $(addprefix src/, $(SRCS:.cpp=.o))
 
 DEPS	= $(OBJS:.o=.d)
