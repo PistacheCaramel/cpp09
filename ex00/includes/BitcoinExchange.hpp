@@ -6,6 +6,7 @@
 # include <fstream>
 # include <map>
 # include <iostream>
+# include <ctype.h>
 
 class	BitcoinExchange
 {
@@ -21,7 +22,11 @@ class	BitcoinExchange
 		std::map<std::string, std::string>	getDatabase(void) const;
 		void			setDatabase(std::fstream& fs);
 		void			printDatabase(void);
+		std::string		findDate(std::string line);
 };
+
+int	check_date_formt(std::string str);
+int	check_line_format(std::string str);
 
 std::ostream &	operator<<(std::ostream & o, BitcoinExchange const & i);
 #endif
