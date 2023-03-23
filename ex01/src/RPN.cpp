@@ -9,7 +9,7 @@
 		*this = copy;
 	}
 
-RPN&	RPN::operator=( RPN  &src)
+RPN&	RPN::operator=( RPN  const &src)
 	{
 		if (this == &src)
 			return (*this);
@@ -17,12 +17,12 @@ RPN&	RPN::operator=( RPN  &src)
 		return (*this);
 	}
 
-std::vector<int>	RPN::getRes()
+std::vector<int>	RPN::getRes() const
 			{
 				return (_res);
 			}
 
-void	RPN::setRes(std::string arg)
+int	RPN::setRes(std::string arg)
 	{
 		size_t 	pos;
 		int	on;
@@ -31,7 +31,7 @@ void	RPN::setRes(std::string arg)
 		if (pos == std::string::npos || isdigit(arg[pos]) == 0)
 		{
 			std::cerr << "Error" << std::endl;
-			return ;
+			return (1);
 		}
 		_res.push_back(arg[pos] - 48);
 		pos++;
@@ -43,7 +43,7 @@ void	RPN::setRes(std::string arg)
 				if (_res.size() < 2)
 				{
 					std::cerr << "Error" << std::endl;
-					return ;
+					return (1);
 				}
 				if (arg[pos] == '+')
 					on = *(_res.end() - 1) + *(_res.end() - 2);
@@ -56,7 +56,7 @@ void	RPN::setRes(std::string arg)
 					if (*(_res.end() - 1) == 0)
 					{
 						std::cerr << "Error" << std::endl;
-						return ;
+						return (1);
 					}	
 					on = *(_res.end() - 2) / *(_res.end() - 1);
 				}
@@ -71,6 +71,7 @@ void	RPN::setRes(std::string arg)
 			}
 			pos++;
 		}
+		return (0);
 	}
 	
 void	RPN::printRes(void)

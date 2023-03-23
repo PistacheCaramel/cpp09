@@ -13,9 +13,9 @@ class	RPN
 					RPN(void);
 					RPN( RPN&);
 					~RPN(void);
-		RPN&		operator=( RPN &src);
-		std::vector<int>	getRes(void);
-		void			setRes(std::string arg);
+		RPN&		operator=( RPN const &src);
+		std::vector<int>	getRes(void) const;
+		int			setRes(std::string arg);
 		void			printRes(void);
 };
 
