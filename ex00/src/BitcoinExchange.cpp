@@ -62,8 +62,28 @@ std::map<std::string, std::string>	BitcoinExchange::getDatabase(void) const
 
 std::string				BitcoinExchange::findDate(std::string line)
 					{
+						size_t						pos;
+						std::map<std::string, std::string>::iterator	it;
+						double					res;	
+						double					value;
+
 						if (check_line_format(line) == 1)
+						{
 							std::cerr << "Error bad input => " << line << std::endl;
+							return (line);
+						}
+						pos = line.find_first_of(" ");
+						it = _database.upper_bound(line.substr(0, pos));
+						if (it != _database.begin())
+							it--;
+						value = atof(line.substr(pos + 3, line.size() - line[pos + 3]).c_str());
+						if (value > 1000 || value < 0)
+						{
+							std::cerr << "Error: too large a number." << std::endl;
+							return (line);
+						}
+						res =  atof(it->second.c_str()) * value;
+						std::cout << line.substr(0, line.find_first_of(" ")) << " => " << res << std::endl;
 						return (line);
 					}
 
@@ -71,6 +91,8 @@ int			check_date_format(std::string str)
 			{
 				size_t pos;
 
+				if (str.size() != 10)
+					return (1);
 				pos = str.find_first_not_of("0123456789", 0);
 				if (pos == std::string::npos || pos != 4 || str[pos] != '-')
 					return (1);

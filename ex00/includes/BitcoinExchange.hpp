@@ -7,6 +7,7 @@
 # include <map>
 # include <iostream>
 # include <ctype.h>
+# include <stdlib.h>
 
 class	BitcoinExchange
 {
