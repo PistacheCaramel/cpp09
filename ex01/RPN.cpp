@@ -17,7 +17,7 @@ RPN&	RPN::operator=( RPN  const &src)
 		return (*this);
 	}
 
-std::vector<int>	RPN::getRes() const
+std::list<int>	RPN::getRes() const
 			{
 				return (_res);
 			}
@@ -26,6 +26,8 @@ int	RPN::setRes(std::string arg)
 	{
 		size_t 	pos;
 		int	on;
+		std::list<int>::iterator it;
+		std::list<int>::iterator it2;
 
 		pos = arg.find_first_not_of(" ");
 		if (pos == std::string::npos || isdigit(arg[pos]) == 0)
@@ -45,20 +47,25 @@ int	RPN::setRes(std::string arg)
 					std::cerr << "Error" << std::endl;
 					return (1);
 				}
+				it = _res.end();
+				it2 = _res.end();
+				it--;
+				it2--;
+				it2--;
 				if (arg[pos] == '+')
-					on = *(_res.end() - 1) + *(_res.end() - 2);
+					on = *it + *it2;
 				if (arg[pos] == '-')
-					on = *(_res.end() - 2) - *(_res.end() - 1);
+					on = *it2 - *it;
 				if (arg[pos] == '*')
-					on = *(_res.end() - 1) * *(_res.end() - 2);
+					on = *it * *it2;
 				if (arg[pos] == '/')
 				{
-					if (*(_res.end() - 1) == 0)
+					if (*it == 0)
 					{
 						std::cerr << "Error" << std::endl;
 						return (1);
 					}	
-					on = *(_res.end() - 2) / *(_res.end() - 1);
+					on = *it2 / *it;
 				}
 				_res.pop_back();
 				_res.pop_back();
@@ -76,7 +83,7 @@ int	RPN::setRes(std::string arg)
 	
 void	RPN::printRes(void)
 	{
-		std::vector<int>::iterator it;
+		std::list<int>::iterator it;
 
 		it = _res.begin();
 		while (it != _res.end())

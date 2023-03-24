@@ -8,7 +8,7 @@ int	main(int ac, char **av)
 
 	if (ac < 2)
 	{
-		std:::cerr << "Need at least one number" << std::endl;
+		std::cerr << "Need at least one number" << std::endl;
 		return (0);
 	}
 	i = 1;
@@ -18,12 +18,15 @@ int	main(int ac, char **av)
 		numbers.push_back(' ');
 		i++;
 	}
-	numbers.pop_back();
+	//if (numbers.empty() == false)
+	//	numbers.erase(numbers.end() - 1);
 	if (numbers.find_first_not_of("0123456789 ") != std::string::npos)
 	{
 		std::cerr << "Bad entry." << std::endl;
 		return (0);
 	}
 	sorter.setData(numbers);
+	sorter.mergeInsertsort();
+	sorter.printNumbers();
 	return (0);;
 }
