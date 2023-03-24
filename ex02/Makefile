@@ -1,10 +1,10 @@
-NAME	= btc
+NAME	= PmergeMe
 
 CXX		= c++
 
 CXXFLAGS	= -Wall -Wextra -Werror -MMD -std=c++98 -g3
 
-SRCS	= main.cpp BitcoinExchange.cpp
+SRCS	= main.cpp PmergeMe.cpp
 OBJS	= $(SRCS:.cpp=.o)
 
 DEPS	= $(OBJS:.o=.d)

@@ -5,11 +5,11 @@ CXX		= c++
 CXXFLAGS	= -Wall -Wextra -Werror -MMD -std=c++98 -g3
 
 SRCS	= main.cpp RPN.cpp 
-OBJS	= $(addprefix src/, $(SRCS:.cpp=.o))
+OBJS	= $(SRCS:.cpp=.o)
 
 DEPS	= $(OBJS:.o=.d)
 
-IFLAGS	= -Iincludes
+IFLAGS	= -I.
 
 all		:	$(NAME)
 
