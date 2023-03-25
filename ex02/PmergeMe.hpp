@@ -7,6 +7,7 @@
 # include <iostream>
 # include <stdlib.h>
 # include <utility>
+# include <algorithm>
 
 class	PmergeMe
 {
@@ -32,9 +33,9 @@ class	PmergeMe
 		void						fusionSort(std::vector<std::pair<int,int> >::iterator it, size_t size);
 		void						binarySearch(void);
 		void						pushPair(void);
+		void						searchPair(void);
+		void						searchPlace(std::vector<std::pair<int, int> >::iterator it, std::vector<int>::iterator begin, std::vector<int>::iterator pl);
 };
-
-int	group_size(int g_size, int power);
 
 #endif
 

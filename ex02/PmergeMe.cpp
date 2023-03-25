@@ -51,12 +51,12 @@ void		PmergeMe::setData(std::string numbers)
 
 void		PmergeMe::printNumbers(void) const
 		{
-			std::vector<std::pair<int, int> >::const_iterator	it;
+			std::vector<int>::const_iterator	it;
 			
-			it = _lpair.begin();
-			while (it != _lpair.end())
+			it = _lsorted.begin();
+			while (it != _lsorted.end())
 			{
-				std::cout << it->first << " ";
+				std::cout << *it << " ";
 				it++;
 			}
 			std::cout << std::endl;
@@ -121,36 +121,78 @@ void		PmergeMe::fusionSort(std::vector<std::pair<int,int> >::iterator it, size_t
 
 void		PmergeMe::pushPair(void)
 		{
-			std::vector<pair<int, int> >::iterator	it;
+			std::vector<std::pair<int, int> >::iterator	it;
 
 			it = _lpair.begin();
-			_sorted.push_back(it->second);
+			_lsorted.push_back(it->second);
 			while (it != _lpair.end())
 			{
-				sorted.push_back(it->first);
+				_lsorted.push_back(it->first);
 				it++;
 			}
 		}
 
-int		group_size(int g_size, int power)
+void		PmergeMe::searchPlace(std::vector<std::pair<int, int> >::iterator it, std::vector<int>::iterator begin, std::vector<int>::iterator pl)
 		{
-			return (power - g_size);
+			int	distance;
+
+			distance = std::distance(begin, pl);
+			std::cout << "distance:" << distance << std::endl;
+			if (distance < 2)
+			{
+				std::cout << *pl << "   " << it->second << std::endl;
+				if (it->second < *pl)
+					_lsorted.insert(pl, it->second);
+				else
+					_lsorted.insert(pl + 1, it->second);
+			}
+			else
+			{
+				if (it->second < *pl)
+					searchPlace(it, begin, pl - distance / 2);
+				else if (it->second > *pl)
+					searchPlace(it, pl, pl + distance / 2);
+			}
 		}
 
 void		PmergeMe::binarySearch(void)
 		{
 			int	power;
-			int	g_size;
+			size_t	g_size;
+			std::vector<std::pair<int, int> >::iterator	begin;
+			std::vector<std::pair<int, int> >::iterator	end;
+			std::vector<int>::iterator	pl;
 
 			power = 2;
 			g_size = 2;
-
+			_lpair.erase(_lpair.begin());
+			begin = _lpair.begin();
+			end = begin + g_size - 1;
+			while (1)
+			{
+				while (end != begin)
+				{
+					pl = find(_lsorted.begin(), _lsorted.end(), end->first);
+					std::cout << "first:" << end->first << "   second:" << end->second << "pl:" << *pl << "distance entre begin et pl:" << std::distance(_lsorted.begin(), pl) << std::endl;	
+					searchPlace(end, _lsorted.begin(), pl - std::distance(_lsorted.begin(), pl) / 2);
+					end--;
+				}
+				if (g_size + std::distance(_lpair.begin(), begin) < _lpair.size())
+				{
+					begin += g_size;
+					power *= 2;
+					g_size = power - g_size;
+					end = begin + g_size - 1;
+				}
+				else
+					break;
+			}
 		}
 			
 void		PmergeMe::mergeInsertsort(void)
 		{
 			size_t	pos;
-			int	pend;
+			//int	pend;
 
 			pos = 0;
 			while (pos < _lcont.size() - 1)
@@ -161,24 +203,11 @@ void		PmergeMe::mergeInsertsort(void)
 					_lpair.push_back(std::make_pair(_lcont[pos + 1], _lcont[pos]));
 				pos = pos + 2;
 			}
-			if (pos == _lcont.size())
-				pend = _lcont[pos];
+			//if (pos == _lcont.size())
+			//	pend = _lcont[pos];
 //ne pas oublier de gerer le cas ou yen a un qui est tout seul dans son goupe
 			fusionSort(_lpair.begin(), _lpair.size());
 			pushPair();
+			binarySearch();
 			
 		}
-
-std::vector<std::pair<int,int> >::iterator PmergeMe::increase_iterator(size_t inc, std::vector<std::pair<int,int> >::iterator it)
-					{
-						size_t	i;
-
-						i = 0;
-						while (i < inc)
-						{
-							it++;
-							i++;
-						}
-
-						return (it);
-					}
