@@ -119,6 +119,34 @@ void		PmergeMe::fusionSort(std::vector<std::pair<int,int> >::iterator it, size_t
 		fusion(it, size, size / 2);
 }
 
+void		PmergeMe::pushPair(void)
+		{
+			std::vector<pair<int, int> >::iterator	it;
+
+			it = _lpair.begin();
+			_sorted.push_back(it->second);
+			while (it != _lpair.end())
+			{
+				sorted.push_back(it->first);
+				it++;
+			}
+		}
+
+int		group_size(int g_size, int power)
+		{
+			return (power - g_size);
+		}
+
+void		PmergeMe::binarySearch(void)
+		{
+			int	power;
+			int	g_size;
+
+			power = 2;
+			g_size = 2;
+
+		}
+			
 void		PmergeMe::mergeInsertsort(void)
 		{
 			size_t	pos;
@@ -133,8 +161,12 @@ void		PmergeMe::mergeInsertsort(void)
 					_lpair.push_back(std::make_pair(_lcont[pos + 1], _lcont[pos]));
 				pos = pos + 2;
 			}
+			if (pos == _lcont.size())
+				pend = _lcont[pos];
 //ne pas oublier de gerer le cas ou yen a un qui est tout seul dans son goupe
 			fusionSort(_lpair.begin(), _lpair.size());
+			pushPair();
+			
 		}
 
 std::vector<std::pair<int,int> >::iterator PmergeMe::increase_iterator(size_t inc, std::vector<std::pair<int,int> >::iterator it)

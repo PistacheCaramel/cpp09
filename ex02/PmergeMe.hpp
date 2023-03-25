@@ -30,9 +30,11 @@ class	PmergeMe
 		void						fusion(std::vector<std::pair<int,int> >::iterator it, size_t size, size_t middle);
 
 		void						fusionSort(std::vector<std::pair<int,int> >::iterator it, size_t size);
-		std::vector<std::pair<int,int> >::iterator 	increase_iterator(size_t inc, std::vector<std::pair<int,int> >::iterator it);
-
+		void						binarySearch(void);
+		void						pushPair(void);
 };
+
+int	group_size(int g_size, int power);
 
 #endif
 
