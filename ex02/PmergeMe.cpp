@@ -17,7 +17,7 @@ PmergeMe&	PmergeMe::operator=(PmergeMe const &src)
 		{
 			if (this == &src)
 				return (*this);
-			_lcont = src.getLcont();
+			_vcont = src.getLcont();
 			_dcont = src.getDcont();
 			return (*this);
 		}
@@ -29,7 +29,7 @@ std::deque<int>	PmergeMe::getDcont(void) const
 
 std::vector<int>	PmergeMe::getLcont(void) const
 		{
-			return (_lcont);
+			return (_vcont);
 		}
 
 void		PmergeMe::setData(std::string numbers)
@@ -41,7 +41,7 @@ void		PmergeMe::setData(std::string numbers)
 			while (pos != std::string::npos)
 			{
 				current = atoi(numbers.substr(pos, numbers.find_first_not_of("0123456789", pos) + 1).c_str());
-				_lcont.push_back(current);
+				_vcont.push_back(current);
 				_dcont.push_back(current);
 				pos = numbers.find_first_not_of("0123456789", pos);
 				if (pos != std::string::npos)
@@ -53,9 +53,11 @@ void		PmergeMe::printNumbers(void) const
 		{
 			std::vector<int>::const_iterator	it;
 			
-			it = _lsorted.begin();
-			while (it != _lsorted.end())
+			it = _vsorted.begin();
+			while (it != _vsorted.end())
 			{
+				if (it != _vsorted.end() && it + 1 != _vsorted.end() && *it > *(it + 1))
+					std::cout << "ERROR:" << std::endl;
 				std::cout << *it << " ";
 				it++;
 			}
@@ -100,7 +102,6 @@ void		PmergeMe::fusion(std::vector<std::pair<int,int> >::iterator it, size_t siz
 			middleit = sorted.begin();
 			while (begin != it + size)
 			{
-				std::cout << "valeur a changer:" << begin->first << "    valeur remplace:" << middleit->first << std::endl;
 				*begin = *middleit;
 				begin++;
 				middleit++;
@@ -123,35 +124,45 @@ void		PmergeMe::pushPair(void)
 		{
 			std::vector<std::pair<int, int> >::iterator	it;
 
-			it = _lpair.begin();
-			_lsorted.push_back(it->second);
-			while (it != _lpair.end())
+			it = _vpair.begin();
+			_vsorted.push_back(it->second);
+			while (it != _vpair.end())
 			{
-				_lsorted.push_back(it->first);
+				_vsorted.push_back(it->first);
 				it++;
 			}
 		}
 
-void		PmergeMe::searchPlace(std::vector<std::pair<int, int> >::iterator it, std::vector<int>::iterator begin, std::vector<int>::iterator pl)
+void		PmergeMe::searchPlace(int to_place, std::vector<int>::iterator begin, std::vector<int>::iterator pl)
 		{
 			int	distance;
 
 			distance = std::distance(begin, pl);
-			std::cout << "distance:" << distance << std::endl;
-			if (distance < 2)
+
+			
+			if (begin == pl)
 			{
-				std::cout << *pl << "   " << it->second << std::endl;
-				if (it->second < *pl)
-					_lsorted.insert(pl, it->second);
+				if (to_place < *pl)
+					_vsorted.insert(pl, to_place);
 				else
-					_lsorted.insert(pl + 1, it->second);
+					_vsorted.insert(pl + 1, to_place);
 			}
 			else
 			{
-				if (it->second < *pl)
-					searchPlace(it, begin, pl - distance / 2);
-				else if (it->second > *pl)
-					searchPlace(it, pl, pl + distance / 2);
+				if (to_place < *pl)
+				{
+					if (distance >= 2)
+						searchPlace(to_place, begin, pl - distance / 2);
+					else
+						searchPlace(to_place, begin, pl - distance);
+				}
+				else
+				{
+					if (distance >= 2)
+						searchPlace(to_place, pl, pl + distance / 2);
+					else
+						searchPlace(to_place, pl, pl + distance);
+				}
 			}
 		}
 
@@ -165,19 +176,18 @@ void		PmergeMe::binarySearch(void)
 
 			power = 2;
 			g_size = 2;
-			_lpair.erase(_lpair.begin());
-			begin = _lpair.begin();
+			_vpair.erase(_vpair.begin());
+			begin = _vpair.begin();
 			end = begin + g_size - 1;
 			while (1)
 			{
-				while (end != begin)
+				while (end < _vpair.end() && end != begin)
 				{
-					pl = find(_lsorted.begin(), _lsorted.end(), end->first);
-					std::cout << "first:" << end->first << "   second:" << end->second << "pl:" << *pl << "distance entre begin et pl:" << std::distance(_lsorted.begin(), pl) << std::endl;	
-					searchPlace(end, _lsorted.begin(), pl - std::distance(_lsorted.begin(), pl) / 2);
+					pl = find(_vsorted.begin(), _vsorted.end(), end->first);
+					searchPlace(end->second, _vsorted.begin(), _vsorted.begin() + std::distance(_vsorted.begin(), pl) / 2);
 					end--;
 				}
-				if (g_size + std::distance(_lpair.begin(), begin) < _lpair.size())
+				if (g_size + std::distance(_vpair.begin(), begin) < _vpair.size())
 				{
 					begin += g_size;
 					power *= 2;
@@ -192,22 +202,32 @@ void		PmergeMe::binarySearch(void)
 void		PmergeMe::mergeInsertsort(void)
 		{
 			size_t	pos;
-			//int	pend;
+			int	pend;
 
 			pos = 0;
-			while (pos < _lcont.size() - 1)
+			if (_vcont.size() == 1)
 			{
-				if (_lcont[pos] > _lcont[pos + 1])
-					_lpair.push_back(std::make_pair(_lcont[pos], _lcont[pos + 1]));
+				_vsorted = _vcont;
+				return ;
+			}
+			while (pos < _vcont.size() - 1)
+			{
+				if (_vcont[pos] > _vcont[pos + 1])
+					_vpair.push_back(std::make_pair(_vcont[pos], _vcont[pos + 1]));
 				else
-					_lpair.push_back(std::make_pair(_lcont[pos + 1], _lcont[pos]));
+					_vpair.push_back(std::make_pair(_vcont[pos + 1], _vcont[pos]));
 				pos = pos + 2;
 			}
-			//if (pos == _lcont.size())
-			//	pend = _lcont[pos];
-//ne pas oublier de gerer le cas ou yen a un qui est tout seul dans son goupe
-			fusionSort(_lpair.begin(), _lpair.size());
+			if (pos == _vcont.size() - 1)
+				pend = _vcont[pos];
+			else
+				pend = -1;
+			fusionSort(_vpair.begin(), _vpair.size());
 			pushPair();
 			binarySearch();
-			
+			if (pend != -1)
+			{
+				std::cout << "here" << std::endl;
+				searchPlace(pend, _vsorted.begin(), _vsorted.begin() + std::distance(_vsorted.begin(), _vsorted.end()) / 2);
+			}
 		}

@@ -12,10 +12,9 @@
 class	PmergeMe
 {
 	private:
-			std::vector<int>	_lcont;
-			std::vector<int>	_lsorted;
-			std::vector<int>	_pending;
-			std::vector<std::pair<int, int> >	_lpair;
+			std::vector<int>	_vcont;
+			std::vector<int>	_vsorted;
+			std::vector<std::pair<int, int> >	_vpair;
 			std::deque<int>	_dcont;
 	public:
 					PmergeMe(void);
@@ -34,7 +33,7 @@ class	PmergeMe
 		void						binarySearch(void);
 		void						pushPair(void);
 		void						searchPair(void);
-		void						searchPlace(std::vector<std::pair<int, int> >::iterator it, std::vector<int>::iterator begin, std::vector<int>::iterator pl);
+		void						searchPlace(int to_place, std::vector<int>::iterator begin, std::vector<int>::iterator pl);
 };
 
 #endif

@@ -18,8 +18,6 @@ int	main(int ac, char **av)
 		numbers.push_back(' ');
 		i++;
 	}
-	//if (numbers.empty() == false)
-	//	numbers.erase(numbers.end() - 1);
 	if (numbers.find_first_not_of("0123456789 ") != std::string::npos)
 	{
 		std::cerr << "Bad entry." << std::endl;
