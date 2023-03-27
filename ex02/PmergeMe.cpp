@@ -198,14 +198,28 @@ void		PmergeMe::binarySearch(void)
 					break;
 			}
 		}
+
+int		PmergeMe::sortChecker(void) const
+		{
+			std::vector<int>::const_iterator	it;
 			
+			it = _vsorted.begin();
+			while (it != _vsorted.end())
+			{
+				if (it != _vsorted.end() && it + 1 != _vsorted.end() && *it > *(it + 1))
+					return (1);
+				it++;
+			}
+			return (0);
+		}
+
 void		PmergeMe::mergeInsertsort(void)
 		{
 			size_t	pos;
 			int	pend;
 
 			pos = 0;
-			if (_vcont.size() == 1)
+			if (_vcont.size() == 1 /*|| sortChecker() == 0*/)
 			{
 				_vsorted = _vcont;
 				return ;
@@ -226,8 +240,5 @@ void		PmergeMe::mergeInsertsort(void)
 			pushPair();
 			binarySearch();
 			if (pend != -1)
-			{
-				std::cout << "here" << std::endl;
 				searchPlace(pend, _vsorted.begin(), _vsorted.begin() + std::distance(_vsorted.begin(), _vsorted.end()) / 2);
-			}
 		}

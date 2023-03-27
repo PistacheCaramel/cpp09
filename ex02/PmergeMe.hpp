@@ -34,6 +34,7 @@ class	PmergeMe
 		void						pushPair(void);
 		void						searchPair(void);
 		void						searchPlace(int to_place, std::vector<int>::iterator begin, std::vector<int>::iterator pl);
+		int						sortChecker(void) const;
 };
 
 #endif
