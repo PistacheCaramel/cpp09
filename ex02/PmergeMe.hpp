@@ -25,18 +25,20 @@ class	PmergeMe
 		PmergeMe&		operator=( PmergeMe const &src);
 		std::deque<int>					getDcont(void) const;
 		std::vector<int>					getLcont(void) const;
-		void						setData(std::string numbers);
+		void						formatedPrint(long int time_of_vector, long int time_of_deque) const;
+		void						setDatav(std::string numbers);
 		void						printNumbers(long int time_of_vector, long int time_of_deque) const;
-		void						sortList(void);
-		void						mergeInsertsort(void);
-		void						fusion(std::vector<std::pair<int,int> >::iterator it, size_t size, size_t middle);
+		void						vsortList(void);
+		void						vmergeInsertsort(void);
+		void						vfusion(std::vector<std::pair<int,int> >::iterator it, size_t size, size_t middle);
 
-		void						fusionSort(std::vector<std::pair<int,int> >::iterator it, size_t size);
-		void						binarySearch(void);
-		void						pushPair(void);
-		void						searchPair(void);
-		void						searchPlace(int to_place, std::vector<int>::iterator begin, std::vector<int>::iterator pl);
-		int						sortChecker(void) const;
+		void						vfusionSort(std::vector<std::pair<int,int> >::iterator it, size_t size);
+		void						vbinarySearch(void);
+		void						vpushPair(void);
+		void						vsearchPair(void);
+		void						vsearchPlace(int to_place, std::vector<int>::iterator begin, std::vector<int>::iterator pl);
+		int						vsortChecker(void) const;
+		void						setDatad(std::string numbers);
 		void						dmergeInsertsort(void);
 		void						dfusion(std::deque<std::pair<int,int> >::iterator it, size_t size, size_t middle);
 

@@ -28,17 +28,20 @@ int	main(int ac, char **av)
 		std::cerr << "Bad entry." << std::endl;
 		return (0);
 	}
-	sorter.setData(numbers);
 	gettimeofday(&before, NULL);
-	sorter.mergeInsertsort();
+	sorter.setDatav(numbers);
+	sorter.vmergeInsertsort();
 	gettimeofday(&after, NULL);
 	time_of_vector = (after.tv_sec - before.tv_sec) * 1000000;
 	time_of_vector += (after.tv_usec - before.tv_usec);
 	gettimeofday(&before, NULL);
+	sorter.setDatad(numbers);
 	sorter.dmergeInsertsort();
 	gettimeofday(&after, NULL);
 	time_of_deque = (after.tv_sec - before.tv_sec) * 1000000;
 	time_of_deque += (after.tv_usec - before.tv_usec);
-	sorter.printNumbers(time_of_vector, time_of_deque);
+	sorter.formatedPrint(time_of_vector, time_of_deque);
+	//sorter.printNumbers(time_of_vector, time_of_deque);
+	
 	return (0);;
 }
