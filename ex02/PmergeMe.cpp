@@ -49,11 +49,13 @@ void		PmergeMe::setData(std::string numbers)
 			}
 		}
 
-void		PmergeMe::printNumbers(void) const
+void		PmergeMe::printNumbers(long int time_of_vector, long int time_of_deque) const
 		{
 			std::vector<int>::const_iterator	it;
+			std::deque<int>::const_iterator	ite;
 			
 			it = _vsorted.begin();
+			std::cout << "VECTOR:" << time_of_vector << "usec" << std::endl;
 			while (it != _vsorted.end())
 			{
 				if (it != _vsorted.end() && it + 1 != _vsorted.end() && *it > *(it + 1))
@@ -62,6 +64,17 @@ void		PmergeMe::printNumbers(void) const
 				it++;
 			}
 			std::cout << std::endl;
+			std::cout << "DEQUE:" << time_of_deque << "usec" << std::endl;
+			ite = _dsorted.begin();
+			while (ite != _dsorted.end())
+			{
+				if (ite != _dsorted.end() && ite + 1 != _dsorted.end() && *ite > *(ite + 1))
+					std::cout << "ERROR:" << std::endl;
+				std::cout << *ite << " ";
+				ite++;
+			}
+			std::cout << std::endl;
+
 		}
 
 void		PmergeMe::fusion(std::vector<std::pair<int,int> >::iterator it, size_t size, size_t middle)
@@ -156,6 +169,8 @@ void		PmergeMe::searchPlace(int to_place, std::vector<int>::iterator begin, std:
 					else
 						searchPlace(to_place, begin, pl - distance);
 				}
+				else if (to_place == *pl)
+					_vsorted.insert(pl, to_place);
 				else
 				{
 					if (distance >= 2)
@@ -203,10 +218,10 @@ int		PmergeMe::sortChecker(void) const
 		{
 			std::vector<int>::const_iterator	it;
 			
-			it = _vsorted.begin();
-			while (it != _vsorted.end())
+			it = _vcont.begin();
+			while (it != _vcont.end())
 			{
-				if (it != _vsorted.end() && it + 1 != _vsorted.end() && *it > *(it + 1))
+				if (it != _vcont.end() && it + 1 != _vcont.end() && *it > *(it + 1))
 					return (1);
 				it++;
 			}
@@ -219,7 +234,7 @@ void		PmergeMe::mergeInsertsort(void)
 			int	pend;
 
 			pos = 0;
-			if (_vcont.size() == 1 /*|| sortChecker() == 0*/)
+			if (_vcont.size() == 1 || sortChecker() == 0)
 			{
 				_vsorted = _vcont;
 				return ;
@@ -241,4 +256,187 @@ void		PmergeMe::mergeInsertsort(void)
 			binarySearch();
 			if (pend != -1)
 				searchPlace(pend, _vsorted.begin(), _vsorted.begin() + std::distance(_vsorted.begin(), _vsorted.end()) / 2);
+		}
+
+//		deque		//
+
+void		PmergeMe::dfusion(std::deque<std::pair<int,int> >::iterator it, size_t size, size_t middle)
+		{
+			std::deque<std::pair<int, int> > sorted;
+			std::deque<std::pair<int,int> >::iterator begin;
+			std::deque<std::pair<int,int> >::iterator middleit;
+			size_t					size2;
+
+			begin = it;
+			middleit = it + middle;
+			size2 = 0;
+			while (size2 < size)
+			{
+				if (middleit != it + size && begin->first > middleit->first)
+				{
+					sorted.push_back(*middleit);
+					middleit++;
+				}
+				else if (middleit == it + size)
+				{
+					sorted.push_back(*begin);
+					begin++;
+				}
+				else if (begin == it + middle)
+				{
+					sorted.push_back(*middleit);
+					middleit++;
+				}
+				else
+				{
+					sorted.push_back(*begin);
+					begin++;;
+				}
+				size2 = sorted.size() - 1;
+			}
+			begin = it;
+			middleit = sorted.begin();
+			while (begin != it + size)
+			{
+				*begin = *middleit;
+				begin++;
+				middleit++;
+			}
+		}
+
+
+			
+
+void		PmergeMe::dfusionSort(std::deque<std::pair<int,int> >::iterator it, size_t size)
+{
+		if (size < 2)
+			return;
+		dfusionSort(it, size / 2);
+		dfusionSort(it + size / 2, size - size / 2);
+		dfusion(it, size, size / 2);
+}
+
+void		PmergeMe::dpushPair(void)
+		{
+			std::deque<std::pair<int, int> >::iterator	it;
+
+			it = _dpair.begin();
+			_dsorted.push_back(it->second);
+			while (it != _dpair.end())
+			{
+				_dsorted.push_back(it->first);
+				it++;
+			}
+		}
+
+void		PmergeMe::dsearchPlace(int to_place, std::deque<int>::iterator begin, std::deque<int>::iterator pl)
+		{
+			int	distance;
+
+			distance = std::distance(begin, pl);
+
+			
+			if (begin == pl)
+			{
+				if (to_place < *pl)
+					_dsorted.insert(pl, to_place);
+				else
+					_dsorted.insert(pl + 1, to_place);
+			}
+			else
+			{
+				if (to_place < *pl)
+				{
+					if (distance >= 2)
+						dsearchPlace(to_place, begin, pl - distance / 2);
+					else
+						dsearchPlace(to_place, begin, pl - distance);
+				}
+				else if (to_place == *pl)
+					_dsorted.insert(pl, to_place);
+				else
+				{
+					if (distance >= 2)
+						dsearchPlace(to_place, pl, pl + distance / 2);
+					else
+						dsearchPlace(to_place, pl, pl + distance);
+				}
+			}
+		}
+
+void		PmergeMe::dbinarySearch(void)
+		{
+			int	power;
+			size_t	g_size;
+			std::deque<std::pair<int, int> >::iterator	begin;
+			std::deque<std::pair<int, int> >::iterator	end;
+			std::deque<int>::iterator	pl;
+
+			power = 2;
+			g_size = 2;
+			_dpair.erase(_dpair.begin());
+			begin = _dpair.begin();
+			end = begin + g_size - 1;
+			while (1)
+			{
+				while (end < _dpair.end() && end != begin)
+				{
+					pl = find(_dsorted.begin(), _dsorted.end(), end->first);
+					dsearchPlace(end->second, _dsorted.begin(), _dsorted.begin() + std::distance(_dsorted.begin(), pl) / 2);
+					end--;
+				}
+				if (g_size + std::distance(_dpair.begin(), begin) < _dpair.size())
+				{
+					begin += g_size;
+					power *= 2;
+					g_size = power - g_size;
+					end = begin + g_size - 1;
+				}
+				else
+					break;
+			}
+		}
+
+int		PmergeMe::dsortChecker(void) const
+		{
+			std::deque<int>::const_iterator	it;
+			
+			it = _dcont.begin();
+			while (it != _dcont.end())
+			{
+				if (it != _dcont.end() && it + 1 != _dcont.end() && *it > *(it + 1))
+					return (1);
+				it++;
+			}
+			return (0);
+		}
+
+void		PmergeMe::dmergeInsertsort(void)
+		{
+			size_t	pos;
+			int	pend;
+
+			pos = 0;
+			if (_dcont.size() == 1 || sortChecker() == 0)
+			{
+				_dsorted = _dcont;
+				return ;
+			}
+			while (pos < _dcont.size() - 1)
+			{
+				if (_dcont[pos] > _dcont[pos + 1])
+					_dpair.push_back(std::make_pair(_dcont[pos], _dcont[pos + 1]));
+				else
+					_dpair.push_back(std::make_pair(_dcont[pos + 1], _dcont[pos]));
+				pos = pos + 2;
+			}
+			if (pos == _dcont.size() - 1)
+				pend = _dcont[pos];
+			else
+				pend = -1;
+			dfusionSort(_dpair.begin(), _dpair.size());
+			dpushPair();
+			dbinarySearch();
+			if (pend != -1)
+				dsearchPlace(pend, _dsorted.begin(), _dsorted.begin() + std::distance(_dsorted.begin(), _dsorted.end()) / 2);
 		}
