@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   PmergeMe.cpp                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ybendavi <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/03/30 17:30:06 by ybendavi          #+#    #+#             */
+/*   Updated: 2023/03/30 19:28:06 by ybendavi         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "PmergeMe.hpp"
 
 		PmergeMe::PmergeMe(void)
@@ -32,20 +44,23 @@ std::vector<int>	PmergeMe::getLcont(void) const
 			return (_vcont);
 		}
 
-void		PmergeMe::setDatav(std::string numbers)
+int		PmergeMe::setDatav(std::string numbers)
 		{
 			size_t		pos;
-			long int	current;
+			unsigned long int	current;
 
 			pos = numbers.find_first_not_of(" ");
 			while (pos != std::string::npos)
 			{
 				current = atoi(numbers.substr(pos, numbers.find_first_not_of("0123456789", pos) + 1).c_str());
+				if (current > INT_MAX)
+					return (1);
 				_vcont.push_back(current);
 				pos = numbers.find_first_not_of("0123456789", pos);
 				if (pos != std::string::npos)
 					pos = numbers.find_first_not_of(" ", pos);
 			}
+			return (0);
 		}
 
 void		PmergeMe::setDatad(std::string numbers)
@@ -170,7 +185,7 @@ void		PmergeMe::vsearchPlace(int to_place, std::vector<int>::iterator begin, std
 			distance = std::distance(begin, pl);
 
 			
-			if (begin == pl)
+			if (begin == pl || pl == _vsorted.end() - 1)
 			{
 				if (to_place < *pl)
 					_vsorted.insert(pl, to_place);
@@ -227,7 +242,14 @@ void		PmergeMe::vbinarySearch(void)
 					end = begin + g_size - 1;
 				}
 				else
+				{
+					if (_vpair.size() == 1)
+					{
+						pl = find(_vsorted.begin(), _vsorted.end(), _vpair.begin()->first);
+						vsearchPlace(_vpair.begin()->second, _vsorted.begin(), _vsorted.begin() + std::distance(_vsorted.begin(), pl) / 2);
+					}
 					break;
+				}
 			}
 		}
 
@@ -272,7 +294,7 @@ void		PmergeMe::vmergeInsertsort(void)
 			vpushPair();
 			vbinarySearch();
 			if (pend != -1)
-				vsearchPlace(pend, _vsorted.begin(), _vsorted.begin() + std::distance(_vsorted.begin(), _vsorted.end()) / 2);
+				vsearchPlace(pend, _vsorted.begin(), _vsorted.begin() + std::distance(_vsorted.begin(), _vsorted.end() - 1) / 2);
 		}
 
 //		deque		//
@@ -353,7 +375,7 @@ void		PmergeMe::dsearchPlace(int to_place, std::deque<int>::iterator begin, std:
 			distance = std::distance(begin, pl);
 
 			
-			if (begin == pl)
+			if (begin == pl || pl == _dsorted.end() - 1)
 			{
 				if (to_place < *pl)
 					_dsorted.insert(pl, to_place);
@@ -410,7 +432,15 @@ void		PmergeMe::dbinarySearch(void)
 					end = begin + g_size - 1;
 				}
 				else
+				{
+					
+					if (_dpair.size() == 1)
+					{
+						pl = find(_dsorted.begin(), _dsorted.end(), _dpair.begin()->first);
+						dsearchPlace(_dpair.begin()->second, _dsorted.begin(), _dsorted.begin() + std::distance(_dsorted.begin(), pl) / 2);
+					}
 					break;
+				}
 			}
 		}
 

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   PmergeMe.hpp                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ybendavi <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/03/30 17:30:02 by ybendavi          #+#    #+#             */
+/*   Updated: 2023/03/30 17:30:09 by ybendavi         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef PMERGEME_HPP
 # define PMERGEME_HPP
 
@@ -8,6 +20,7 @@
 # include <stdlib.h>
 # include <utility>
 # include <algorithm>
+# include <limits.h>
 
 class	PmergeMe
 {
@@ -26,7 +39,7 @@ class	PmergeMe
 		std::deque<int>					getDcont(void) const;
 		std::vector<int>					getLcont(void) const;
 		void						formatedPrint(long int time_of_vector, long int time_of_deque) const;
-		void						setDatav(std::string numbers);
+		int						setDatav(std::string numbers);
 		void						printNumbers(long int time_of_vector, long int time_of_deque) const;
 		void						vsortList(void);
 		void						vmergeInsertsort(void);

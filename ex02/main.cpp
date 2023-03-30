@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.cpp                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ybendavi <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/03/30 17:30:31 by ybendavi          #+#    #+#             */
+/*   Updated: 2023/03/30 19:31:34 by ybendavi         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "PmergeMe.hpp"
 #include <sys/time.h>
 
@@ -29,7 +41,11 @@ int	main(int ac, char **av)
 		return (0);
 	}
 	gettimeofday(&before, NULL);
-	sorter.setDatav(numbers);
+	if (sorter.setDatav(numbers) == 1)
+	{
+		std::cout << "Only handle integers." << std::endl;
+		return (0);
+	}
 	sorter.vmergeInsertsort();
 	gettimeofday(&after, NULL);
 	time_of_vector = (after.tv_sec - before.tv_sec) * 1000000;
@@ -41,6 +57,7 @@ int	main(int ac, char **av)
 	time_of_deque = (after.tv_sec - before.tv_sec) * 1000000;
 	time_of_deque += (after.tv_usec - before.tv_usec);
 	sorter.formatedPrint(time_of_vector, time_of_deque);
+	std::cout << "size should have:" << ac - 1 << "size of vector:" << sorter.getLcont().size() << "size of deque:" << sorter.getDcont().size() << std::endl;
 	//sorter.printNumbers(time_of_vector, time_of_deque);
 	
 	return (0);;
