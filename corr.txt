@@ -1,0 +1,1 @@
+ex00 = diff pour les nombres negatifs, le sujet ecrit "Error : not a positive number" mais il y a juste "bad input" sur ton code

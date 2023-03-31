@@ -6,7 +6,7 @@
 /*   By: ybendavi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 17:31:23 by ybendavi          #+#    #+#             */
-/*   Updated: 2023/03/30 17:31:25 by ybendavi         ###   ########.fr       */
+/*   Updated: 2023/03/31 16:58:10 by ybendavi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 # define BITCOINEXCHANGE_HPP
 
 # include <string>
+# include <iomanip>
+# include <math.h>
 # include <fstream>
 # include <map>
 # include <iostream>

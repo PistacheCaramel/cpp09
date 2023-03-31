@@ -6,7 +6,7 @@
 /*   By: ybendavi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 17:30:57 by ybendavi          #+#    #+#             */
-/*   Updated: 2023/03/30 17:31:00 by ybendavi         ###   ########.fr       */
+/*   Updated: 2023/03/31 17:20:07 by ybendavi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,8 @@ std::string				BitcoinExchange::findDate(std::string line)
 						std::map<std::string, std::string>::iterator	it;
 						double					res;	
 						double					value;
+						double					calc;
+						int					precision;
 
 						if (check_line_format(line) == 1)
 						{
@@ -94,8 +96,16 @@ std::string				BitcoinExchange::findDate(std::string line)
 							std::cerr << "Error: too large a number." << std::endl;
 							return (line);
 						}
+						precision = 0;
 						res =  atof(it->second.c_str()) * value;
-						std::cout << line.substr(0, line.find_first_of(" ")) << " => " << res << std::endl;
+						calc = res;
+						while (calc != round(calc) && calc != round(calc) - 1)
+						{
+							precision++;
+							calc *= 10;
+						}
+						std::cout << line.substr(0, line.find_first_of(" ")) << " => " << std::fixed << std::setprecision(precision) << line.substr(pos + 3, line.size() - line[pos + 3]) << " = " << res;
+						std::cout << std::endl;
 						return (line);
 					}
 

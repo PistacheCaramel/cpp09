@@ -6,7 +6,7 @@
 /*   By: ybendavi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 17:32:31 by ybendavi          #+#    #+#             */
-/*   Updated: 2023/03/30 17:32:35 by ybendavi         ###   ########.fr       */
+/*   Updated: 2023/03/31 15:05:49 by ybendavi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,17 +16,18 @@
 # include <string>
 # include <list>
 # include <iostream>
+# include <limits.h>
 
 class	RPN
 {
 	private:
-			std::list<int>	_res;
+			std::list<long long int>	_res;
 	public:
 					RPN(void);
 					RPN( RPN&);
 					~RPN(void);
 		RPN&		operator=( RPN const &src);
-		std::list<int>	getRes(void) const;
+		std::list<long long int>	getRes(void) const;
 		int			setRes(std::string arg);
 		void			printRes(void);
 };

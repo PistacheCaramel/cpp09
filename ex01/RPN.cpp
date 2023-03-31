@@ -6,7 +6,7 @@
 /*   By: ybendavi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 17:32:21 by ybendavi          #+#    #+#             */
-/*   Updated: 2023/03/30 17:32:23 by ybendavi         ###   ########.fr       */
+/*   Updated: 2023/03/31 15:19:25 by ybendavi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ RPN&	RPN::operator=( RPN  const &src)
 		return (*this);
 	}
 
-std::list<int>	RPN::getRes() const
+std::list<long long int>	RPN::getRes() const
 			{
 				return (_res);
 			}
@@ -37,9 +37,9 @@ std::list<int>	RPN::getRes() const
 int	RPN::setRes(std::string arg)
 	{
 		size_t 	pos;
-		int	on;
-		std::list<int>::iterator it;
-		std::list<int>::iterator it2;
+		long long int	on;
+		std::list<long long int>::iterator it;
+		std::list<long long int>::iterator it2;
 
 		pos = arg.find_first_not_of(" ");
 		if (pos == std::string::npos || isdigit(arg[pos]) == 0)
@@ -52,6 +52,8 @@ int	RPN::setRes(std::string arg)
 		while (pos != std::string::npos && arg[pos] != 0)
 		{
 			pos = arg.find_first_not_of(" ", pos);
+			if (pos == std::string::npos)
+				return (0);
 			if (arg[pos] == '+' || arg[pos] == '-' || arg[pos] == '/' || arg[pos] == '*')
 			{
 				if (_res.size() < 2)
@@ -88,6 +90,13 @@ int	RPN::setRes(std::string arg)
 			{
 				_res.push_back(arg[pos] - 48);
 			}
+			it = _res.end();
+			it--;
+			if (*it > INT_MAX || *it < INT_MIN)
+			{
+				std::cerr << "Overflow reached." << std::endl;
+				return (1);
+			}
 			pos++;
 		}
 		return (0);
@@ -95,7 +104,7 @@ int	RPN::setRes(std::string arg)
 	
 void	RPN::printRes(void)
 	{
-		std::list<int>::iterator it;
+		std::list<long long int>::iterator it;
 
 		it = _res.begin();
 		while (it != _res.end())
