@@ -6,7 +6,7 @@
 /*   By: ybendavi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 17:30:57 by ybendavi          #+#    #+#             */
-/*   Updated: 2023/03/31 17:20:07 by ybendavi         ###   ########.fr       */
+/*   Updated: 2023/04/05 17:31:31 by ybendavi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,10 +80,17 @@ std::string				BitcoinExchange::findDate(std::string line)
 						double					value;
 						double					calc;
 						int					precision;
+						int					ret;
 
-						if (check_line_format(line) == 1)
+						ret = check_line_format(line);
+						if (ret == 1)
 						{
 							std::cerr << "Error bad input => " << line << std::endl;
+							return (line);
+						}
+						else if (ret == 2)
+						{
+							std::cerr << "Error: not a positive number." << std::endl;
 							return (line);
 						}
 						pos = line.find_first_of(" ");
@@ -142,6 +149,8 @@ int			check_line_format(std::string str)
 					return (1);
 				if (str[pos + 1] == 0 || str[pos + 2] == 0)
 					return (1);
+				if (str[pos + 3] == '-')
+					return (2);
 				if (isdigit(str[pos + 3]) == 0)
 					return (1);
 				pos = str.find_first_not_of("0123456789", pos + 3);

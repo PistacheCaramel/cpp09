@@ -6,7 +6,7 @@
 /*   By: ybendavi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 17:30:02 by ybendavi          #+#    #+#             */
-/*   Updated: 2023/03/30 17:30:09 by ybendavi         ###   ########.fr       */
+/*   Updated: 2023/04/05 19:59:49 by ybendavi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,9 @@ class	PmergeMe
 					~PmergeMe(void);
 		PmergeMe&		operator=( PmergeMe const &src);
 		std::deque<int>					getDcont(void) const;
-		std::vector<int>					getLcont(void) const;
+		std::deque<int>					getDsorted(void) const;
+		std::vector<int>				getVcont(void) const;
+		std::vector<int>				getVsorted(void) const;
 		void						formatedPrint(long int time_of_vector, long int time_of_deque) const;
 		int						setDatav(std::string numbers);
 		void						printNumbers(long int time_of_vector, long int time_of_deque) const;

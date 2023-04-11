@@ -6,7 +6,7 @@
 /*   By: ybendavi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 17:30:06 by ybendavi          #+#    #+#             */
-/*   Updated: 2023/03/30 19:28:06 by ybendavi         ###   ########.fr       */
+/*   Updated: 2023/04/11 14:50:21 by ybendavi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ PmergeMe&	PmergeMe::operator=(PmergeMe const &src)
 		{
 			if (this == &src)
 				return (*this);
-			_vcont = src.getLcont();
+			_vcont = src.getVcont();
 			_dcont = src.getDcont();
 			return (*this);
 		}
@@ -39,9 +39,19 @@ std::deque<int>	PmergeMe::getDcont(void) const
 			return (_dcont);
 		}
 
-std::vector<int>	PmergeMe::getLcont(void) const
+std::vector<int>	PmergeMe::getVcont(void) const
 		{
 			return (_vcont);
+		}
+
+std::deque<int>	PmergeMe::getDsorted(void) const
+		{
+			return (_dsorted);
+		}
+
+std::vector<int>	PmergeMe::getVsorted(void) const
+		{
+			return (_vsorted);
 		}
 
 int		PmergeMe::setDatav(std::string numbers)
@@ -228,10 +238,12 @@ void		PmergeMe::vbinarySearch(void)
 			end = begin + g_size - 1;
 			while (1)
 			{
-				while (end < _vpair.end() && end != begin)
+				while (end < _vpair.end())
 				{
 					pl = find(_vsorted.begin(), _vsorted.end(), end->first);
 					vsearchPlace(end->second, _vsorted.begin(), _vsorted.begin() + std::distance(_vsorted.begin(), pl) / 2);
+					if (end == begin)
+						break;
 					end--;
 				}
 				if (g_size + std::distance(_vpair.begin(), begin) < _vpair.size())
@@ -243,7 +255,13 @@ void		PmergeMe::vbinarySearch(void)
 				}
 				else
 				{
-					if (_vpair.size() == 1)
+					while (begin != _vpair.end() && begin != end)
+					{
+						pl = find(_vsorted.begin(), _vsorted.end(), begin->first);
+						vsearchPlace(begin->second, _vsorted.begin(), _vsorted.begin() + std::distance(_vsorted.begin(), pl) / 2);
+						begin++;
+					}
+					if (_vpair.size() == 1 && begin != end)
 					{
 						pl = find(_vsorted.begin(), _vsorted.end(), _vpair.begin()->first);
 						vsearchPlace(_vpair.begin()->second, _vsorted.begin(), _vsorted.begin() + std::distance(_vsorted.begin(), pl) / 2);
@@ -418,10 +436,13 @@ void		PmergeMe::dbinarySearch(void)
 			end = begin + g_size - 1;
 			while (1)
 			{
-				while (end < _dpair.end() && end != begin)
+				while (end < _dpair.end())
 				{
 					pl = find(_dsorted.begin(), _dsorted.end(), end->first);
 					dsearchPlace(end->second, _dsorted.begin(), _dsorted.begin() + std::distance(_dsorted.begin(), pl) / 2);
+					if (end == begin)
+						break;
+	
 					end--;
 				}
 				if (g_size + std::distance(_dpair.begin(), begin) < _dpair.size())
@@ -433,8 +454,14 @@ void		PmergeMe::dbinarySearch(void)
 				}
 				else
 				{
+					while (begin != _dpair.end() && begin != end)
+					{
+						pl = find(_dsorted.begin(), _dsorted.end(), begin->first);
+						dsearchPlace(begin->second, _dsorted.begin(), _dsorted.begin() + std::distance(_dsorted.begin(), pl) / 2);
+						begin++;
+					}
 					
-					if (_dpair.size() == 1)
+					if (_dpair.size() == 1 && end != begin)
 					{
 						pl = find(_dsorted.begin(), _dsorted.end(), _dpair.begin()->first);
 						dsearchPlace(_dpair.begin()->second, _dsorted.begin(), _dsorted.begin() + std::distance(_dsorted.begin(), pl) / 2);
@@ -506,6 +533,6 @@ void		PmergeMe::formatedPrint(long int time_of_vector, long int time_of_deque) c
 				std::cout << " " << *it;
 				it++;
 			}
-			std::cout << std::endl << "Time to process a range of  " << _vcont.size() << " elements with std::vector : " << time_of_vector << " us" << std::endl;
-			std::cout << "Time to process a range of  " << _vcont.size() << " elements with std::deque : " << time_of_deque << " us" << std::endl;
+			std::cout << std::endl << "Time to process a range of  " << _vsorted.size() << " elements with std::vector : " << time_of_vector << " us" << std::endl;
+			std::cout << "Time to process a range of  " << _dsorted.size() << " elements with std::deque : " << time_of_deque << " us" << std::endl;
 		}
